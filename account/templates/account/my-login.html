@@ -27,6 +27,8 @@
 
             <h3> Login to your acoount</h3>
 
+            <hr>
+
             <br>
             <br>
 
@@ -37,15 +39,27 @@
                 {{form.username|as_crispy_field}}
 
 
-                <br> <br>
+                <br> 
 
                 {{form.password|as_crispy_field}}  <!--  login de sedece password var -->
 
 
               
-                <br> <br> <!-- br boşluk bırakıyor-->
-                <button type="submit" class="btn btn-secondary btn-lg w-100 btn-block p-2"> &nbsp; Login </button>
+                <br>  <!-- br boşluk bırakıyor-->
+                <button type="submit" class="btn btn-primary navbar-btn text-white w-100 p-2"> <i class="fa fa-key" aria-hidden="true"></i> &nbsp; Login </button>
                 
+                <br> <br>
+
+                <div class="text-center">
+
+                    <a href="{% url 'register' %}"> Don't have an account?</a>
+
+                    <br><br>
+
+                    <a href="{% url 'my-login' %}"> Did you forget your passord?</a>
+
+                </div>
+
             </form>
 
         </div>

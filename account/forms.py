@@ -52,13 +52,6 @@ class UpdateUserForm(forms.ModelForm):
 
     password = None  # şifre güncellememize gerek yok o yüzden None yazdık
 
-
-    # bu def sayesinde email boş bırakarak username güncellenemeyecek.
-    def __init__(self, *args, **kwargs):
-        super(UpdateUserForm, self).__init__(*args, **kwargs)
-
-        self.fields['email'].required = True    
-
     class Meta: # Meta verilerimizi tanımlamak için
 
         model = User
@@ -67,4 +60,40 @@ class UpdateUserForm(forms.ModelForm):
         exclude = ['password1','password1']
 
 
+    # bu def sayesinde email boş bırakarak username güncellenemeyecek.
+    def __init__(self, *args, **kwargs):
+        super(UpdateUserForm, self).__init__(*args, **kwargs)
 
+        self.fields['email'].required = True    
+
+    
+    # Email Validation
+    def clean_email(self):
+
+        email = self.cleaned_data.get("email")
+
+        # tüm mailleri filterele eğer bu mail varsa hata bas eğer (exclude) giriş yapılan maille aynı değilse
+        if User.objects.filter(email = email).exclude(pk=self.instance.pk).exists():    # sadece isim değiştirebilir o yüzden exist direk kullanamayız.var diye ismi değiştirtmez o yüzden exclude ile kullanıyoruz
+
+            raise forms.ValidationError('This email is invalid.')
+
+        if len(email) >= 350:   # üstteki durumu geçtik bu doğru mu ?
+
+            raise forms.ValidationError('Your email is too long.')
+        
+        return email   # takılmadıysa hiçbirine maili döndür
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
