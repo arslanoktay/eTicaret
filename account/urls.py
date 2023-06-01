@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+
+from django.contrib.auth import views as auth_views   # Django hazır kütüphanesi. Password değiştirme için kullanılıyor
+
 urlpatterns = [
 
 
@@ -31,6 +34,7 @@ urlpatterns = [
     path('user-logout', views.user_logout, name='user-logout'),
 
 
+
     # Dashboard / profile urls
 
     path('dashboard', views.dashboard, name='dashboard'),
@@ -41,6 +45,18 @@ urlpatterns = [
 
 
 
+    # Password management urls/views
 
+    # submit our email forms
+    path('reset_password', auth_views.PasswordResetView.as_view(template_name="account/password/password-reset.html"), name='reset_password'),
+
+    # Success message stating that a password reset email was sent
+    path('reset_password_sent', auth_views.PasswordResetDoneView.as_view(template_name="account/password/password-reset-sent.html"), name="password_reset_done"),
+
+    # password reset link 
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="account/password/password-reset-form.html"), name='password_reset_confirm'),
+
+    # Password
+    path('reset_password_complete', auth_views.PasswordResetCompleteView.as_view(template_name="account/password/password-reset-complete.html"), name='password_reset_complete'),
 
 ]

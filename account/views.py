@@ -14,6 +14,9 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
+
+from django.contrib import messages
+
 # Create your views here.
 
 def register(request):
@@ -129,15 +132,34 @@ def my_login(request):
 
 def user_logout(request):
 
-    auth.logout(request)
+    # auth.logout(request) # Session loginle başlar, bununla kesilir. Tüm sessionlar, cart yüklenen ürünlerin silinmesi yanlış
+
+    # logout değiştirdik böylece cart boşaltılmayacak
+    try:
+        for key in list(request.session.keys()):
+
+            if key == 'session_key':
+
+                continue
+            else:          
+                del request.session[key]
+    
+    except KeyError:
+
+        pass
+
+    messages.success(request, "Logout success")  # base.html de succes kısmına bakarak yazı yazdırıyoruz.
 
     return redirect('store')  # stor, home page demek
+
+
 
 
 @login_required(login_url='my-login') # login değilsek bu sayfaya ulaşmamız engelleniyor
 def dashboard(request):
 
     return render(request, 'account/dashboard.html')
+
 
 
 
@@ -156,6 +178,8 @@ def profile_management(request):
 
             user_form.save()
 
+            messages.info(request, "Account updated")
+
             return redirect('dashboard')
 
 
@@ -173,6 +197,8 @@ def delete_account(request):
     if request.method == 'POST':
     
         user.delete()
+
+        messages.error(request, "Account deleted")
 
         return redirect('store')
 

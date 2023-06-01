@@ -18,8 +18,11 @@ urlpatterns = [
     # Cart app
     path('cart/', include('cart.urls')), # bir üstteki boş olduğu için cart/ yazmak zorundayız.
 
-    #Account app
+    # Account app
     path('account/', include('account.urls')),
+
+    # Payment app
+    path('payment/', include('payment.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

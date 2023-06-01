@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 
     'account', # Django app 23.05
 
+    'payment', # Django app 01.06
+
     'mathfilters',  # lib. cartta quantity kadar gösterme --> OA 22.05
     
     'crispy_forms', # 24.05
