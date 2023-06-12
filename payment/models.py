@@ -23,7 +23,7 @@ class ShippingAdress(models.Model):
 
     # FK --> foreign key / müşterilerin tek bir adresi olması için
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) # shipping i mecbur bırakmıyoruz / authenticated ve non authenticated(kimliği doğrulanmamış)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) # shipping i mecbur bırakmıyoruz / authenticated ve non authenticated(kimliği doğrulanmamış) -- bir shpiing yaratıldığında admin panelinde hangi üyeye bağlı görüyoruz
 
 
     class META:

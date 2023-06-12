@@ -225,11 +225,11 @@ def manage_shipping(request):
 
         shipping = None
 
-    form = ShippingForm(instance=shipping)
+    form = ShippingForm(instance=shipping) 
 
     if request.method == "POST":
 
-        form = ShippingForm(request.POST, instance=shipping) # adresi yoksa yenisini yaratacak varsa onu alacak
+        form = ShippingForm(request.POST, instance=shipping) # adresi yoksa yenisini yaratacak varsa onu alacak yani sayfaya geri gelince gömülü kalacak çünkü formu objeye eşitledik
 
         if form.is_valid():
 
