@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, LoginForm, UpdateUserForm
 
+from payment.forms import ShippingForm  # manage-shipping için
+from payment.models import ShippingAdress
+
 from django.contrib.auth.models import User
 
 from django.contrib.sites.shortcuts import get_current_site   # live olursa gerekli bir kütüphane, localde çalıştığımız için duracak
@@ -205,3 +208,42 @@ def delete_account(request):
     return render(request, 'account/delete-account.html')
 
 
+
+# Shipping view
+@login_required(login_url='my-login')
+def manage_shipping(request):
+
+    try:
+
+        # Account user with shipment information
+
+        shipping = ShippingAdress.objects.get(user=request.user.id) # user çoktan adresi girmiş mi?
+
+    except ShippingAdress.DoesNotExist:
+
+        # account have no shipment information
+
+        shipping = None
+
+    form = ShippingForm(instance=shipping)
+
+    if request.method == "POST":
+
+        form = ShippingForm(request.POST, instance=shipping) # adresi yoksa yenisini yaratacak varsa onu alacak
+
+        if form.is_valid():
+
+            # Assign the user FK on the object
+
+            shipping_user = form.save(commit = False)
+
+            # adding FK itself
+            shipping_user.user = request.user
+
+            shipping_user.save()
+
+            return redirect('dashboard')
+        
+    context = {'form':form}
+
+    return render(request, 'account/manage-shipping.html', context=context)
