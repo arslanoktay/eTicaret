@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import ShippingAdress,Order,OrderItem
 from cart.cart import Cart
+from django.http import JsonResponse
 # Create your views here.
 
 def checkout(request):
@@ -58,13 +59,45 @@ def complete_order(request):
 
             1-) Create order -> Account users with/without shipping info
             
-            2-) Create order -> Guest users without an account
+            
         '''
+        # 1-) Create order -> Account users with/without shipping info
+        if request.user.is_authenticated:
+
+            order = Order.objects.create(full_name=name, email=email, shipping_address=shipping_address,amount_paid=total_cost, user=request.user)
+
+            order_id = order.pk  #primary key of order
+
+            for item in cart:
+                OrderItem.objects.create(order_id=order,product=item['product'], quantity=item['qty'], price=['price'],user=request.user)
 
 
+        # 2-) Create order -> Guest users without an account
+        else:
+
+            order = Order.objects.create(full_name=name, email=email, shipping_address=shipping_address,amount_paid=total_cost)
+
+            order_id = order.pk  #primary key of order
+
+            for item in cart:
+                OrderItem.objects.create(order_id=order,product=item['product'], quantity=item['qty'], price=['price'])
+            
+        order_success = True
+
+        response = JsonResponse({"success":order_success})
+
+        return response  #birşeyler döndürmemiz lazım
 
 
 def payment_success(request):
+
+    # Clear shopping cart
+    for key in list(request.session.keys()):
+
+        if key == "session_key":
+
+            del request.session[key]
+
 
     return render(request, 'payment/payment-success.html')
 
